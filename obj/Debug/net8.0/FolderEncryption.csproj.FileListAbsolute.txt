@@ -1,0 +1,15 @@
+/home/pension/Documents/FolderEncryption/obj/Debug/net8.0/FolderEncryption.GeneratedMSBuildEditorConfig.editorconfig
+/home/pension/Documents/FolderEncryption/obj/Debug/net8.0/FolderEncryption.AssemblyInfoInputs.cache
+/home/pension/Documents/FolderEncryption/obj/Debug/net8.0/FolderEncryption.AssemblyInfo.cs
+/home/pension/Documents/FolderEncryption/obj/Debug/net8.0/FolderEncryption.csproj.CoreCompileInputs.cache
+/home/pension/Documents/FolderEncryption/obj/Debug/net8.0/FolderEncryption.sourcelink.json
+/home/pension/Documents/FolderEncryption/bin/Debug/net8.0/FolderEncryption
+/home/pension/Documents/FolderEncryption/bin/Debug/net8.0/FolderEncryption.deps.json
+/home/pension/Documents/FolderEncryption/bin/Debug/net8.0/FolderEncryption.runtimeconfig.json
+/home/pension/Documents/FolderEncryption/bin/Debug/net8.0/FolderEncryption.dll
+/home/pension/Documents/FolderEncryption/bin/Debug/net8.0/FolderEncryption.pdb
+/home/pension/Documents/FolderEncryption/obj/Debug/net8.0/FolderEncryption.dll
+/home/pension/Documents/FolderEncryption/obj/Debug/net8.0/refint/FolderEncryption.dll
+/home/pension/Documents/FolderEncryption/obj/Debug/net8.0/FolderEncryption.pdb
+/home/pension/Documents/FolderEncryption/obj/Debug/net8.0/FolderEncryption.genruntimeconfig.cache
+/home/pension/Documents/FolderEncryption/obj/Debug/net8.0/ref/FolderEncryption.dll

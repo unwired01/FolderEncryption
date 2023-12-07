@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "FolderEncryption/1.0.0": {
+        "runtime": {
+          "FolderEncryption.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "FolderEncryption/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

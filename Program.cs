@@ -7,33 +7,46 @@ class Program
 {
     static void Main(string[] args)
     {
-        if (args.Length != 2 || (args[0] != "-e" && args[0] != "-d"))
-        {
-            Console.WriteLine("FolderEncryptor -e|-d <folderPath>");
-            Console.WriteLine("-e [FOLDER_NAME] encrypt folder (-e c:\\myfolder)");
-            Console.WriteLine("-d [FILE_NAME] decrypt file to folder (-d file.enc)");
-            return;
-        }
-        bool encrypt = args[0] == "-e";
-        string folderPath = args[1];
-
-        Console.Write("Enter your password: ");
-        string password = ReadPassword();
-
+        var targetDecryptPath = string.Empty;
+        var password = string.Empty;
+        Console.Write("Choose on option (E)ncryption or (D)ecryption: ");
+        string optionText = Console.ReadLine().ToLower();
         try
         {
-            if (encrypt)
+            if (optionText == "e")
             {
-                FolderEncryptor.EncryptFolder(folderPath, password);
-                Console.WriteLine("Folder encrypted successfully.");
+                Console.Write("Enter the folder path to encrypt: ");
+                string folderPath = Console.ReadLine();
+                Console.Write("Enter your password: ");
+                password = ReadPassword();
+                Console.Write("Confirm the password: ");
+                string confirmPassword = ReadPassword();
+                if (password != confirmPassword)
+                    Console.WriteLine("Passwords do not match.");
+                else
+                {
+                    FolderEncryptor.EncryptFolder(folderPath, password);
+                    Console.WriteLine("Folder encrypted successfully.");
+                }
+            }
+            else if (optionText == "d")
+            {
+                Console.Write("Enter file name to decrypt: ");
+                string fileName = Console.ReadLine();
+                Console.Write("Enter target folder to extract (Optional, otherwise find it on run-folder): ");
+                targetDecryptPath = Console.ReadLine();
+                Console.Write("Enter your password: ");
+                password = ReadPassword();
+                FolderEncryptor.DecryptFolder(fileName, password, targetDecryptPath);
+                Console.WriteLine("Folder decrypted successfully.");
+
             }
             else
             {
-                FolderEncryptor.DecryptFolder(folderPath, password);
-                Console.WriteLine("Folder decrypted successfully.");
+                Console.WriteLine("Invalid option (E|D)");
             }
         }
-        catch(System.Security.Cryptography.CryptographicException ex)
+        catch (System.Security.Cryptography.CryptographicException ex)
         {
             Console.WriteLine($"********A Crypto error occurred, check your password********");
             Console.WriteLine($"{ex.Message}");
@@ -42,6 +55,9 @@ class Program
         {
             Console.WriteLine($"An error occurred: {ex}");
         }
+
+        Console.WriteLine("Press any key to exit");
+        Console.ReadKey();
     }
     private static string ReadPassword()
     {

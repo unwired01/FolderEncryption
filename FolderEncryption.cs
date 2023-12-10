@@ -33,7 +33,7 @@ public class FolderEncryptor
         }
     }
 
-    public static void DecryptFolder(string encryptedFileFullName, string password)
+    public static string DecryptFolder(string encryptedFileFullName, string password, string decryptTargetPath)
     {
         // Validate the encrypted file path
         if (!File.Exists(encryptedFileFullName))
@@ -47,9 +47,11 @@ public class FolderEncryptor
         DecryptFile(encryptedFileFullName, decryptZipFileName, password);
 
         // Decompress the .enc file
-        ZipFile.ExtractToDirectory(decryptZipFileName, decryptedFileWithoutExt);
+        string folderDecriptionPath = Path.Combine(decryptTargetPath, decryptedFileWithoutExt);
+        ZipFile.ExtractToDirectory(decryptZipFileName, folderDecriptionPath);
         File.Delete(decryptZipFileName);
         File.Delete(encryptedFileFullName);
+        return folderDecriptionPath;
     }
 
     private static void EncryptFile(string fileFullName, Aes aesAlg, byte[] salt)

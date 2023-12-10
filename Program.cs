@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 namespace FolderEncryption;
@@ -37,9 +38,9 @@ class Program
                 targetDecryptPath = Console.ReadLine();
                 Console.Write("Enter your password: ");
                 password = ReadPassword();
-                FolderEncryptor.DecryptFolder(fileName, password, targetDecryptPath);
+                string folderPath =  FolderEncryptor.DecryptFolder(fileName, password, targetDecryptPath);
                 Console.WriteLine("Folder decrypted successfully.");
-
+                OpenDecryptFolder(folderPath);
             }
             else
             {
@@ -82,5 +83,27 @@ class Program
         }
         Console.WriteLine();
         return password.ToString();
+    }
+
+    private static void OpenDecryptFolder(string folderPath)
+    {
+        ProcessStartInfo processStartInfo = new ProcessStartInfo
+        {
+            FileName = "explorer.exe",
+            Arguments = folderPath,
+            UseShellExecute = true
+        };
+
+        try
+        {
+            using (Process process = Process.Start(processStartInfo))
+            {
+                Console.WriteLine($"Opened {folderPath} in Windows Explorer.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

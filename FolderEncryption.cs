@@ -8,7 +8,7 @@ public class FolderEncryptor
 {
     private const int SALT_SIZE_BYTES = 32; //256 bits
     private const int KEY_SIZE_BYTES  = 32; //256 bits
-    private const int IV_SIZE_BYTES   = 16; //1s8 bits
+    private const int IV_SIZE_BYTES   = 16; //128 bits
     public static void EncryptFolder(string folderPath, string password, string? keyFilePath = default)
     {
         // Validate the folder path

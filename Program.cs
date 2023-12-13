@@ -34,7 +34,7 @@ class Program
             {
                 Console.Write("Enter file name to decrypt: ");
                 string fileName = Console.ReadLine();
-                Console.Write("Enter target folder to extract (Optional, otherwise find it on run-folder): ");
+                Console.Write("Enter destination folder for extraction (optional; if not provided, the parent folder will be used): ");
                 targetDecryptPath = Console.ReadLine();
                 Console.Write("Enter your password: ");
                 password = ReadPassword();

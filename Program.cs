@@ -26,7 +26,9 @@ class Program
                     Console.WriteLine("Passwords do not match.");
                 else
                 {
-                    FolderEncryptor.EncryptFolder(folderPath, password);
+                    Console.Write("Enter the key file path (optional): ");
+                    string keyFilePath = Console.ReadLine();
+                    FolderEncryptor.EncryptFolder(folderPath, password, keyFilePath);
                     Console.WriteLine("Folder encrypted successfully.");
                 }
             }
@@ -38,7 +40,9 @@ class Program
                 targetDecryptPath = Console.ReadLine();
                 Console.Write("Enter your password: ");
                 password = ReadPassword();
-                string folderPath =  FolderEncryptor.DecryptFolder(fileName, password, targetDecryptPath);
+                Console.Write("Enter the key file path (optional): ");
+                string keyFilePath = Console.ReadLine();
+                string folderPath =  FolderEncryptor.DecryptFolder(fileName, password, targetDecryptPath, keyFilePath);
                 Console.WriteLine("Folder decrypted successfully.");
                 OpenDecryptFolder(folderPath);
             }

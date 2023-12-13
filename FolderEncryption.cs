@@ -6,6 +6,9 @@ using System.Text;
 
 public class FolderEncryptor
 {
+    private const int SALT_SIZE_BYTES = 32; //256 bits
+    private const int KEY_SIZE_BYTES  = 32; //256 bits
+    private const int IV_SIZE_BYTES   = 16; //1s8 bits
     public static void EncryptFolder(string folderPath, string password, string? keyFilePath = default)
     {
         // Validate the folder path
@@ -26,8 +29,8 @@ public class FolderEncryptor
         using (Aes aesAlg = Aes.Create())
         {
             Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(password, salt);
-            aesAlg.Key = pdb.GetBytes(32); // AES-256
-            aesAlg.IV = pdb.GetBytes(16); // AES block size is 128 bits
+            aesAlg.Key = pdb.GetBytes(KEY_SIZE_BYTES); // AES-256
+            aesAlg.IV = pdb.GetBytes(IV_SIZE_BYTES); // AES block size is 128 bits
 
             var (key, iv) = GenerateKeyAndIV(password, salt, keyFilePath);
             aesAlg.Key = key; // AES-256
@@ -92,7 +95,7 @@ public class FolderEncryptor
         byte[] encryptedContentWithSalt = File.ReadAllBytes(inputFilePath);
 
         // Extract the salt
-        byte[] salt = new byte[32]; // The length of the salt is known (256 bits)
+        byte[] salt = new byte[SALT_SIZE_BYTES]; // The length of the salt is known (256 bits)
         Buffer.BlockCopy(encryptedContentWithSalt, 0, salt, 0, salt.Length);
 
         // Extract the encrypted content
@@ -131,9 +134,9 @@ public class FolderEncryptor
         }
     }
 
-    private static byte[] GenerateRandomSalt()
+    private static byte[] GenerateRandomSalt(int size = SALT_SIZE_BYTES)
     {
-        byte[] data = new byte[32]; // 256 bits
+        byte[] data = new byte[size];
         using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
         {
             rng.GetBytes(data);
@@ -142,9 +145,9 @@ public class FolderEncryptor
     }
 
     // Method to generate a key file with random data
-    public static void GenerateKeyFile(string keyFilePath, int size = 32)
+    public static void GenerateKeyFile(string keyFilePath, int size = SALT_SIZE_BYTES)
     {
-        var keyData = GenerateRandomSalt();
+        var keyData = GenerateRandomSalt(size);
 
         // Write the random bytes to the key file
         File.WriteAllBytes(keyFilePath, keyData);
@@ -164,7 +167,7 @@ public class FolderEncryptor
         // Use Rfc2898DeriveBytes to generate the key and IV
         using (var keyGenerator = new Rfc2898DeriveBytes(password, combinedSalt))
         {
-            return new() { key = keyGenerator.GetBytes(32) , iv = keyGenerator.GetBytes(16) };
+            return new() { key = keyGenerator.GetBytes(KEY_SIZE_BYTES) , iv = keyGenerator.GetBytes(IV_SIZE_BYTES) };
         }
     }
 }

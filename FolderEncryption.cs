@@ -7,8 +7,9 @@ using System.Text;
 public class FolderEncryptor
 {
     private const int SALT_SIZE_BYTES = 32; //256 bits
-    private const int KEY_SIZE_BYTES  = 32; //256 bits
-    private const int IV_SIZE_BYTES   = 16; //128 bits
+    private const int KEY_SIZE_BYTES = 32; //256 bits
+    private const int IV_SIZE_BYTES = 16; //128 bits
+    private const int MAX_PBKDF2_ITERATION = 600000; 
     public static void EncryptFolder(string folderPath, string password, string? keyFilePath = default)
     {
         // Validate the folder path
@@ -55,7 +56,7 @@ public class FolderEncryptor
 
         string decryptedFileWithoutExt = Path.GetFileNameWithoutExtension(encryptedFileFullName);
         string decryptZipFileName = decryptedFileWithoutExt + "zip";
-        
+
         DecryptFile(encryptedFileFullName, decryptZipFileName, password, keyFilePath);
 
         if (string.IsNullOrEmpty(decryptTargetPath) == true)
@@ -155,8 +156,8 @@ public class FolderEncryptor
     private static (byte[] key, byte[] iv) GenerateKeyAndIV(string password, byte[] salt, string? keyFilePath = default)
     {
         // Use the key file's contents as an additional factor in the key derivation process
-        byte[] keyFileBytes = string.IsNullOrEmpty(keyFilePath) == false 
-                                    && File.Exists(keyFilePath) 
+        byte[] keyFileBytes = string.IsNullOrEmpty(keyFilePath) == false
+                                    && File.Exists(keyFilePath)
                             ? File.ReadAllBytes(keyFilePath) : new byte[0];
 
         // Combine the salt and key file bytes to use as the salt parameter in the key derivation function
@@ -165,9 +166,9 @@ public class FolderEncryptor
         Buffer.BlockCopy(keyFileBytes, 0, combinedSalt, salt.Length, keyFileBytes.Length);
 
         // Use Rfc2898DeriveBytes to generate the key and IV
-        using (var keyGenerator = new Rfc2898DeriveBytes(password, combinedSalt))
+        using (var keyGenerator = new Rfc2898DeriveBytes(password, combinedSalt, MAX_PBKDF2_ITERATION, HashAlgorithmName.SHA512))
         {
-            return new() { key = keyGenerator.GetBytes(KEY_SIZE_BYTES) , iv = keyGenerator.GetBytes(IV_SIZE_BYTES) };
+            return new() { key = keyGenerator.GetBytes(KEY_SIZE_BYTES), iv = keyGenerator.GetBytes(IV_SIZE_BYTES) };
         }
     }
 }

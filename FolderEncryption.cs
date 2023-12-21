@@ -9,7 +9,10 @@ public class FolderEncryptor
     private const int SALT_SIZE_BYTES = 32; //256 bits
     private const int KEY_SIZE_BYTES = 32; //256 bits
     private const int IV_SIZE_BYTES = 16; //128 bits
-    private const int MAX_PBKDF2_ITERATION = 600000; 
+    private const int MIN_PBKDF2_ITERATION = 10000;
+    private static int max_PBKDF2_ITERATION = 600000;
+    private static HashAlgorithmName shaAlgorithm = HashAlgorithmName.SHA512;
+
     public static void EncryptFolder(string folderPath, string password, string? keyFilePath = default)
     {
         // Validate the folder path
@@ -166,9 +169,31 @@ public class FolderEncryptor
         Buffer.BlockCopy(keyFileBytes, 0, combinedSalt, salt.Length, keyFileBytes.Length);
 
         // Use Rfc2898DeriveBytes to generate the key and IV
-        using (var keyGenerator = new Rfc2898DeriveBytes(password, combinedSalt, MAX_PBKDF2_ITERATION, HashAlgorithmName.SHA512))
+        using (var keyGenerator = new Rfc2898DeriveBytes(password, combinedSalt, FolderEncryptor.GetIteration(), FolderEncryptor.GetSHA()))
         {
             return new() { key = keyGenerator.GetBytes(KEY_SIZE_BYTES), iv = keyGenerator.GetBytes(IV_SIZE_BYTES) };
         }
+    }
+    public static void SetSHA(string name)
+    {
+        if (string.IsNullOrEmpty(name) == false)
+            shaAlgorithm = new HashAlgorithmName(name);
+    }
+    public static HashAlgorithmName GetSHA() 
+    { 
+        return shaAlgorithm;
+    }
+    public static void SetIteration(string iteration)
+    {
+        if (Int32.TryParse(iteration, out int parseIteration) == true)
+        {
+            if (parseIteration < MIN_PBKDF2_ITERATION)
+                parseIteration = MIN_PBKDF2_ITERATION;
+            max_PBKDF2_ITERATION = parseIteration;
+        }
+    }
+    public static int GetIteration()
+    {
+        return max_PBKDF2_ITERATION;
     }
 }
